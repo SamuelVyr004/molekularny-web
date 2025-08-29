@@ -1,9 +1,11 @@
+// Súbor: src/app/layout.tsx
+
 import type { Metadata, Viewport } from "next";
+// Importujeme fonty priamo sem
 import { Space_Grotesk, Roboto } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // <-- VRÁTIME GLOBÁLNE ŠTÝLY
 import { Toaster } from "@/components/ui/toaster";
 
-// Konfigurácia fontov zostáva presne tak, ako si ju mal
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
@@ -17,7 +19,6 @@ const roboto = Roboto({
   variable: "--font-secondary",
 });
 
-// ▼▼▼ Pridané SEO a Mobilné optimalizácie ▼▼▼
 export const metadata: Metadata = {
   title: "Molecular Biology Toolkit | Interactive Pathways",
   description: "An interactive collection of signaling and biochemical pathways for students and researchers. Visualize and understand complex molecular processes.",
@@ -27,9 +28,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
 };
-// ▲▲▲ Koniec pridaných optimalizácií ▲▲▲
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
