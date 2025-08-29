@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const gcCount = (sequence.match(/[GC]/g) || []).length;
 
         const tm = (aCount + tCount) * 2 + gcCount * 4;
-        const ta = tm - 5;
+        const ta = tm - 8;
 
         resLength.textContent = `${sequence.length} nt`;
         resGc.textContent = `${((gcCount / sequence.length) * 100).toFixed(1)} %`;
