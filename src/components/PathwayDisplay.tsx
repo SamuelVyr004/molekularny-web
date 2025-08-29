@@ -1,5 +1,3 @@
-// Súbor: src/components/PathwayDisplay.tsx
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,7 +21,6 @@ type Pathway = {
     details: string | null;
 };
 
-// Funkcia bola premenovaná z PathwaysPage na PathwayDisplay
 export default function PathwayDisplay() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -36,31 +33,43 @@ export default function PathwayDisplay() {
     const activePathwayId = searchParams.get('pathway');
 
     useEffect(() => {
-        const fetchPathways = async () => {
+        const fetchAndSetData = async () => {
             setIsLoading(true);
-            const { data } = await supabase.from('pathways').select('*').eq('is_public', true).order('created_at');
-            setPathways(data || []);
             
-            if (data && data.length > 0) {
-                const pathwayFromUrl = data.find(p => p.id === activePathwayId);
-                // Ak v URL nie je platné ID, alebo tam nie je žiadne, vyber prvú dráhu
-                const initialPathway = pathwayFromUrl || data[0];
-                setActivePathway(initialPathway);
-                // Ak URL bola prázdna, aktualizujeme ju s ID prvej dráhy
-                if (!pathwayFromUrl) {
-                    router.replace(`/pathways?pathway=${initialPathway.id}`, { scroll: false });
+            const { data } = await supabase.from('pathways').select('*').eq('is_public', true).order('created_at');
+            const allPathways = data || [];
+            setPathways(allPathways);
+
+            if (allPathways.length > 0) {
+                const pathwayFromUrl = allPathways.find(p => p.id === activePathwayId);
+                const pathwayToActivate = pathwayFromUrl || allPathways[0];
+
+                setActivePathway(pathwayToActivate);
+
+                // ▼▼▼ TU JE KĽÚČOVÁ ZMENA A OPRAVA ▼▼▼
+                // Opravíme URL len vtedy, ak je to naozaj nevyhnutné (t.j. ak v URL nie je žiadne ID)
+                if (!activePathwayId) {
+                    router.replace(`/pathways?pathway=${pathwayToActivate.id}`, { scroll: false });
                 }
             }
+            
             setIsLoading(false);
         };
-        fetchPathways();
-    }, [activePathwayId, router]); // Pridaný router do závislostí
+
+        fetchAndSetData();
+    // Odstránili sme router a activePathwayId zo závislostí.
+    // Tento efekt sa teraz spoľahlivo spustí LEN RAZ pri prvom načítaní.
+    // O ďalšie zmeny sa postará `selectPathway`.
+    }, []); 
+
 
     const selectPathway = (pathway: Pathway) => {
+        // Ak už je táto dráha aktívna, nerobíme nič
+        if (activePathway?.id === pathway.id) return;
+        
         setActivePathway(pathway);
         setIsShowingActive(false);
         setIsDetailsOpen(false);
-        // Namiesto nahradenia použijeme push pre lepšiu históriu v prehliadači
         router.push(`/pathways?pathway=${pathway.id}`, { scroll: false });
     };
 
@@ -72,7 +81,6 @@ export default function PathwayDisplay() {
         return activePathway.image_url_inactive;
     };
     
-    // Dynamické menenie titulku okna
     useEffect(() => {
         if (activePathway) {
             document.title = `${activePathway.name} | Molecular Biology Toolkit`;
@@ -81,6 +89,7 @@ export default function PathwayDisplay() {
 
     return (
         <>
+            {/* ... zvyšok JSX zostáva úplne rovnaký ... */}
             <div className={`fixed inset-0 bg-black/60 z-30 transition-opacity duration-300 ${isDetailsOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsDetailsOpen(false)} />
             <aside className={`fixed top-0 right-0 h-full w-[90%] md:w-1/3 bg-card border-l border-border p-6 overflow-y-auto transition-transform duration-300 ease-in-out z-40 ${isDetailsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="flex justify-between items-center mb-4">

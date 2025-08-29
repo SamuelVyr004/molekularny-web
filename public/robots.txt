@@ -1,0 +1,12 @@
+# Povoľ všetky stránky
+User-agent: *
+
+# Zakáž indexáciu technických priečinkov Next.js
+Disallow: /_next/
+Disallow: /api/
+
+# Zakáž indexáciu URL s parametrami (často zdroj duplicitných alebo falošných stránok)
+Disallow: /*?
+
+# Tvoja sitemap
+Sitemap: https://mbonlinetools.eu/sitemap.xml
