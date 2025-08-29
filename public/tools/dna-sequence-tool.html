@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Sequence Operations</title>
+    <!-- Odkaz na tvoj starý štýl -->
+    <link rel="stylesheet" href="/legacy-style.css"> 
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">MB.</div> 
+            <ul class="nav-menu">
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/pathways">Pathways</a></li>
+            </ul>
+        </nav>
+        <div class="hero-section">
+            <h1>DNA Sequence Operations</h1>
+            <p class="subtitle">Calculate the complement and reverse complement of a DNA sequence.</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="content-section">
+            <!-- Používame .tool-container pre celkové orámovanie a padding -->
+            <div class="tool-container">
+            
+                <!-- Štruktúra podľa tvojho CSS -->
+                <div class="form-group">
+                    <label for="dna-input">Enter DNA Sequence (5' to 3'):</label>
+                    <textarea id="dna-input" rows="6" placeholder="e.g., ATGCGTAC..."></textarea>
+                </div>
+
+                <!-- Používame .tool-buttons pre správne zobrazenie tlačidiel -->
+                <div class="tool-buttons">
+                    <button id="btn-complement">Get Complement</button>
+                    <button id="btn-reverse-complement">Get Reverse Complement</button>
+                    <button id="btn-clear">Clear</button>
+                </div>
+                
+                <!-- Obalíme výstup, aby mal nadpis -->
+                <div>
+                    <h3>Result:</h3>
+                    <pre id="dna-output"></pre>
+                </div>
+            
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 | A fusion of science and code.</p>
+    </footer>
+
+    <!-- Správne načítanie skriptu -->
+    <script src="/tools/dna-tool-script.js"></script>
+</body>
+</html>
