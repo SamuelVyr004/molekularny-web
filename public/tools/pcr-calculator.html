@@ -4,81 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PCR Calculator | MB Toolkit</title>
-    <link rel="stylesheet" href="../legacy-style.css">
+    <!-- OPRAVA: Odkaz na nový, vygenerovaný CSS súbor -->
+    <link rel="stylesheet" href="/css/style.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <!-- OPRAVA: Odstránené atribúty integrity a crossorigin, ktoré blokovali načítanie -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<body>
-    <header class="main-header">
-        <nav class="navbar">
-            <div class="logo"><a href="../index.html" class="logo-link">MB.</a></div> 
+<body class="bg-background text-text font-secondary">
+    
+    <!-- ===== HEADER ===== -->
+    <header class="py-5 px-[5%] text-center border-b border-border bg-background">
+        <nav class="flex justify-between items-center max-w-6xl mx-auto">
+            <div class="logo"><a href="../index.html" class="font-primary text-3xl font-bold text-primary no-underline">MB.</a></div> 
         </nav>
     </header>
 
-    <main>
-        <section id="tools" class="content-section">
-            <div class="tool-header">
-                <a href="../index.html" class="back-link">&larr; Back to All Tools</a>
-                <h2>PCR Protocol Calculator</h2>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="max-w-4xl mx-auto py-10 px-5">
+        <section id="tools" class="mb-16">
+            <div class="flex items-baseline gap-6 mb-8">
+                <li><a href="/" class="text-text no-underline font-primary text-lg transition-colors hover:text-primary">Home</a></li>
+                <h2 class="font-primary text-4xl text-heading m-0 p-0">PCR Protocol Calculator</h2>
             </div>
-            <div class="tool-container">
-                <div class="tool-input-area">
-                    <div class="input-group">
-                        <label for="polymerase-select">Select Polymerase / Master Mix:</label>
-                        <select id="polymerase-select">
+            <div class="bg-card border border-border rounded-lg p-8 grid md:grid-cols-2 gap-8">
+                
+                <!-- Input sekcia -->
+                <div class="flex flex-col gap-5">
+                    <div>
+                        <label for="polymerase-select" class="block mb-2 text-base">Select Polymerase / Master Mix:</label>
+                        <select id="polymerase-select" class="w-full bg-background border border-border rounded-md text-text font-secondary text-base p-2.5 box-border focus:ring-2 focus:ring-primary focus:outline-none">
                             <option value="q5">Q5 High-Fidelity Master Mix</option>
                             <option value="phusion">Phusion High-Fidelity Master Mix</option>
                             <option value="onetaq">OneTaq Hot Start Master Mix</option>
                             <option value="taq">Standard Taq Polymerase</option>
                         </select>
                     </div>
-                    <div class="input-group">
-                        <label for="sequence-length">Amplicon Length (bp):</label>
-                        <input type="number" id="sequence-length" placeholder="e.g. 1200">
+                    <div>
+                        <label for="sequence-length" class="block mb-2 text-base">Amplicon Length (bp):</label>
+                        <input type="number" id="sequence-length" placeholder="e.g. 1200" class="w-full bg-background border border-border rounded-md text-text font-secondary text-base p-2.5 box-border focus:ring-2 focus:ring-primary focus:outline-none">
                     </div>
 
-                    <label class="optional-label">Primer Analysis (Optional)</label>
-                    <div class="primer-inputs">
-                        <div class="input-group">
-                            <label for="forward-primer">Forward Primer:</label>
-                            <textarea id="forward-primer" rows="2" placeholder="e.g. ATGGCCGATTAT..."></textarea>
+                    <label class="block mt-6 mb-2 font-primary text-lg border-t border-border pt-5">Primer Analysis (Optional)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="forward-primer" class="block mb-2 text-base">Forward Primer:</label>
+                            <textarea id="forward-primer" rows="2" placeholder="e.g. ATGGCCGATTAT..." class="w-full bg-background border border-border rounded-md text-text font-mono text-base p-2.5 box-border resize-vertical focus:ring-2 focus:ring-primary focus:outline-none"></textarea>
                         </div>
-                        <div class="input-group">
-                            <label for="reverse-primer">Reverse Primer:</label>
-                            <textarea id="reverse-primer" rows="2" placeholder="e.g. TCAGTTGCCAAG..."></textarea>
+                        <div>
+                            <label for="reverse-primer" class="block mb-2 text-base">Reverse Primer:</label>
+                            <textarea id="reverse-primer" rows="2" placeholder="e.g. TCAGTTGCCAAG..." class="w-full bg-background border border-border rounded-md text-text font-mono text-base p-2.5 box-border resize-vertical focus:ring-2 focus:ring-primary focus:outline-none"></textarea>
                         </div>
                     </div>
                     <div id="primer-results" class="hidden"></div>
 
-                    <div class="input-group">
-                        <label for="pcr-cycles">Number of Cycles:</label>
-                        <input type="number" id="pcr-cycles" value="30">
+                    <div>
+                        <label for="pcr-cycles" class="block mb-2 text-base">Number of Cycles:</label>
+                        <input type="number" id="pcr-cycles" value="30" class="w-full bg-background border border-border rounded-md text-text font-secondary text-base p-2.5 box-border focus:ring-2 focus:ring-primary focus:outline-none">
                     </div>
 
-                    <div class="tool-buttons-row">
-                        <button id="btn-calculate-pcr" class="calculate-btn">Generate Protocol</button>
-                        <button id="btn-export-txt" class="export-btn hidden">Export as .xlsx</button>
+                    <div class="flex gap-3 mt-4">
+                        <button id="btn-calculate-pcr" class="bg-primary text-primary-foreground border border-primary py-2 px-5 font-primary font-bold text-base rounded-md cursor-pointer transition-colors duration-300 hover:bg-transparent hover:text-primary">Generate Protocol</button>
+                        <button id="btn-export-txt" class="bg-border text-text border border-border py-2 px-5 font-primary font-bold text-base rounded-md cursor-pointer transition-colors duration-300 hover:bg-gray-600 hidden">Export as .xlsx</button>
                     </div>
                 </div>
                 
-                <div class="tool-output-area">
-                    <label>Generated PCR Protocol:</label>
-                    <table id="pcr-results-table">
-                        <thead>
-                            <tr><th></th><th>Step</th><th>Temperature</th><th>Time</th></tr>
+                <!-- Výstupná sekcia -->
+                <div class="flex flex-col">
+                    <label class="font-primary text-lg">Generated PCR Protocol:</label>
+                    <table id="pcr-results-table" class="w-full border-collapse mt-2.5">
+                        <thead class="text-left">
+                            <tr>
+                                <th class="py-3 px-4 border-b border-border font-primary text-heading"></th>
+                                <th class="py-3 px-4 border-b border-border font-primary text-heading">Step</th>
+                                <th class="py-3 px-4 border-b border-border font-primary text-heading">Temperature</th>
+                                <th class="py-3 px-4 border-b border-border font-primary text-heading">Time</th>
+                            </tr>
                         </thead>
-                        <tbody id="pcr-results-body"></tbody>
+                        <tbody id="pcr-results-body">
+                            <!-- Riadky sa generujú dynamicky pomocou JavaScriptu -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
+    <!-- ===== FOOTER ===== -->
+    <footer class="text-center py-5 border-t border-border text-text text-sm bg-background">
         <p>&copy; 2025 | A fusion of science and code.</p>
     </footer>
     <script src="pcr-calculator-script.js"></script>

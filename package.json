@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build-css": "npx tailwindcss -i ./src/app/globals.css -o ./public/css/style.css --watch"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",

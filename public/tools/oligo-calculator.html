@@ -4,52 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oligo Calculator | MB Toolkit</title>
-    <link rel="stylesheet" href="../legacy-style.css">
+    <!-- OPRAVA: Odkaz na nový, vygenerovaný CSS súbor -->
+    <link rel="stylesheet" href="/css/style.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <header class="main-header">
-        <nav class="navbar">
-            <div class="logo"><a href="../index.html" class="logo-link">MB.</a></div> 
+<body class="bg-background text-text font-secondary">
+    
+    <!-- ===== HEADER ===== -->
+    <header class="py-5 px-[5%] text-center border-b border-border bg-background">
+        <nav class="flex justify-between items-center max-w-6xl mx-auto">
+            <div class="logo"><a href="../index.html" class="font-primary text-3xl font-bold text-primary no-underline">MB.</a></div> 
         </nav>
     </header>
 
-    <main>
-        <section id="tools" class="content-section">
-            <div class="tool-header">
-                <a href="../index.html" class="back-link">&larr; Back to All Tools</a>
-                <h2>Oligonucleotide Properties Calculator</h2>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="max-w-4xl mx-auto py-10 px-5">
+        <section id="tools" class="mb-16">
+            <div class="flex items-baseline gap-6 mb-8">
+                <li><a href="/" class="text-text no-underline font-primary text-lg transition-colors hover:text-primary">Home</a></li>
+                <h2 class="font-primary text-4xl text-heading m-0 p-0">Oligonucleotide Properties Calculator</h2>
             </div>
-            <div class="tool-container">
-                <div class="tool-input-area">
-                    <label for="oligo-input">Enter DNA Oligo Sequence (5' to 3'):</label>
-                    <textarea id="oligo-input" rows="6" placeholder="e.g. CTGAGGACGCAAATGTAGTC..."></textarea>
-                    <button id="btn-calculate" class="calculate-btn">Calculate Properties</button>
+            <div class="bg-card border border-border rounded-lg p-8 grid md:grid-cols-2 gap-8">
+                
+                <!-- Input sekcia -->
+                <div class="flex flex-col gap-4">
+                    <label for="oligo-input" class="font-primary text-lg">Enter DNA Oligo Sequence (5' to 3'):</label>
+                    <textarea id="oligo-input" rows="6" placeholder="e.g. CTGAGGACGCAAATGTAGTC..." class="w-full bg-background border border-border rounded-md text-text font-mono text-base p-3 box-border focus:ring-2 focus:ring-primary focus:outline-none"></textarea>
+                    <button id="btn-calculate" class="bg-primary text-primary-foreground border border-primary py-2 px-5 font-primary font-bold text-base rounded-md cursor-pointer transition-colors duration-300 hover:bg-transparent hover:text-primary mt-2">Calculate Properties</button>
                 </div>
                 
-                <div class="tool-output-area">
-                    <label>Melting Temperature (Tm)</label>
-                    <!-- NOVÝ HORIZONTÁLNY TEPLOMER -->
-                    <div class="thermometer-container horizontal">
-                        <div class="thermometer">
-                            <div class="mercury" id="thermometer-mercury">
-                                <span class="temperature-value" id="thermometer-value">--°C</span>
+                <!-- Výstupná sekcia -->
+                <div class="flex flex-col">
+                    <label class="font-primary text-lg">Melting Temperature (Tm)</label>
+                    <!-- Horizontálny teplomer -->
+                    <div class="flex flex-col items-center gap-1.5 mt-6 mb-8 w-[90%] mx-auto">
+                        <div class="w-full h-8 bg-background border-2 border-border rounded-full relative overflow-hidden">
+                            <div id="thermometer-mercury" class="h-full w-0 bg-emerald-400 rounded-full relative transition-all duration-700 ease-out flex justify-end items-center">
+                                <span id="thermometer-value" class="text-background font-bold font-primary text-base pr-2.5 whitespace-nowrap">--°C</span>
                             </div>
                         </div>
-                        <div class="thermometer-scale">
+                        <div class="w-full flex justify-between text-text text-sm px-1 box-border">
                             <span>40°</span><span>50°</span><span>60°</span><span>70°</span>
                         </div>
                     </div>
-                    <!-- Zjednodušená tabuľka s výsledkami -->
-                    <table id="results-table">
+                    
+                    <!-- Výsledková tabuľka -->
+                    <table id="results-table" class="w-full border-collapse mt-2.5">
                         <tbody>
-                            <tr><td>Recommended Ta</td><td id="res-ta">--</td></tr>
-                            <tr class="table-spacer"><td colspan="2"></td></tr>
-                            <tr><td>Length</td><td id="res-length">--</td></tr>
-                            <tr><td>GC Content</td><td id="res-gc">--</td></tr>
-                            <tr><td>Molecular Weight</td><td id="res-mw">--</td></tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-border text-lg font-bold text-heading">Recommended Ta</td>
+                                <td id="res-ta" class="py-3 px-4 border-b border-border text-lg text-primary text-right">--</td>
+                            </tr>
+                            <tr class="h-2"><td colspan="2"></td></tr> <!-- Spacer -->
+                            <tr>
+                                <td class="py-3 px-4 border-b border-border text-lg font-bold text-heading">Length</td>
+                                <td id="res-length" class="py-3 px-4 border-b border-border text-lg text-primary text-right">--</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-border text-lg font-bold text-heading">GC Content</td>
+                                <td id="res-gc" class="py-3 px-4 border-b border-border text-lg text-primary text-right">--</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-lg font-bold text-heading">Molecular Weight</td>
+                                <td id="res-mw" class="py-3 px-4 text-lg text-primary text-right">--</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -57,7 +78,8 @@
         </section>
     </main>
 
-    <footer>
+    <!-- ===== FOOTER ===== -->
+    <footer class="text-center py-5 border-t border-border text-text text-sm bg-background">
         <p>&copy; 2025 | A fusion of science and code.</p>
     </footer>
     <script src="oligo-calculator-script.js"></script>
