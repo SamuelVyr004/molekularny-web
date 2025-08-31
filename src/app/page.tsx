@@ -1,12 +1,12 @@
 // Súbor: src/app/page.tsx
-
 import Link from 'next/link';
 
 export default function HomePage() {
   const tools = [
-    { href: "/tools/dna-sequence-tool.html", title: "DNA Sequence Operations", description: "Calculate the complement and reverse complement of a DNA sequence." },
-    { href: "/tools/oligo-calculator.html", title: "Oligonucleotide Calculator", description: "Calculate properties like Melting Temp (Tm) and GC Content for DNA oligos." },
-    { href: "/tools/pcr-calculator.html", title: "PCR Protocol Calculator", description: "Generate a tailored PCR protocol based on your polymerase and primers." },
+    { href: "/primer-designer", title: "Intelligent Primer Designer", description: "Automatically design optimal PCR primers with an animated analysis.", isNew: true },
+    { href: "/tools/dna-sequence-tool.html", title: "DNA Sequence Operations", description: "Calculate complement and reverse complement." },
+    { href: "/tools/oligo-calculator.html", title: "Oligonucleotide Calculator", description: "Calculate Tm and GC Content for DNA oligos." },
+    { href: "/tools/pcr-calculator.html", title: "PCR Protocol Calculator", description: "Generate a tailored PCR protocol." },
   ];
 
   return (
@@ -31,11 +31,14 @@ export default function HomePage() {
             </p>
         </section>
 
-        <section className="max-w-4xl mx-auto px-4 pb-16 sm:pb-24">
+        <section className="max-w-5xl mx-auto px-4 pb-16 sm:pb-24">
             <h2 className="font-primary text-3xl font-bold mb-8 text-center sm:text-left">Available Tools</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {tools.map((tool, index) => (
-                    <Link href={tool.href} key={index} className="group block bg-card/50 p-6 rounded-lg border border-border hover:border-white/50 transition-all duration-300 hover:scale-[1.02]">
+                {tools.map((tool) => (
+                    <Link href={tool.href} key={tool.href} className="group block bg-card/50 p-6 rounded-lg border border-border hover:border-white/50 transition-all duration-300 hover:scale-[1.02] relative">
+                        {tool.isNew && (
+                            <span className="absolute top-3 right-3 bg-primary text-background text-xs font-bold px-2 py-1 rounded-full">NEW</span>
+                        )}
                         <h3 className="font-primary text-xl font-bold text-heading mb-2">{tool.title}</h3>
                         <p className="text-text">{tool.description}</p>
                     </Link>
