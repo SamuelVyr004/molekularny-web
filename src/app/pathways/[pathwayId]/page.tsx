@@ -21,12 +21,11 @@ type Pathway = {
     details: string | null;
 };
 
-// ▼▼▼ TU JE OPRAVA TYPOVANIA ▼▼▼
-interface PathwayPageProps {
-    params: { pathwayId: string };
-}
+// ▼▼▼ TU JE FINÁLNA A NAJROBUSTNEJŠIA OPRAVA ▼▼▼
+// Namiesto vlastného typu použijeme všeobecnejší prístup
+export default function PathwayPage({ params }: { params: { pathwayId: string } }) {
+    const { pathwayId } = params; // Extrahujeme ID priamo z params
 
-export default function PathwayPage({ params }: PathwayPageProps) {
     const [allPathways, setAllPathways] = useState<Pathway[]>([]);
     const [activePathway, setActivePathway] = useState<Pathway | null>(null);
     const [isShowingActive, setIsShowingActive] = useState(false);
@@ -36,18 +35,22 @@ export default function PathwayPage({ params }: PathwayPageProps) {
     useEffect(() => {
         const fetchAndSetData = async () => {
             setIsLoading(true);
+            // Načítame všetky dráhy
             const { data } = await supabase.from('pathways').select('*').eq('is_public', true).order('created_at');
             const pathwaysData = data || [];
             setAllPathways(pathwaysData);
 
+            // Následne nájdeme a nastavíme tú aktívnu
             if (pathwaysData.length > 0) {
-                const pathwayFromUrl = pathwaysData.find(p => p.id === params.pathwayId);
+                const pathwayFromUrl = pathwaysData.find(p => p.id === pathwayId);
                 setActivePathway(pathwayFromUrl || null);
             }
             setIsLoading(false);
         };
         fetchAndSetData();
-    }, [params.pathwayId]); 
+    }, [pathwayId]); // Efekt teraz závisí priamo od `pathwayId`
+
+    // ... zvyšok kódu zostáva rovnaký ...
 
     const getDisplayedImage = () => {
         if (!activePathway) return null;
