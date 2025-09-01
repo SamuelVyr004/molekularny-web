@@ -31,7 +31,6 @@ export default function HomePage() {
             </p>
         </section>
 
-        {/* ▼▼▼ PRIDANÁ NOVÁ SEKCIA S TEXTOM PRE SEO ▼▼▼ */}
         <section className="max-w-4xl mx-auto px-4 pb-16">
             <div className="bg-card/30 p-8 rounded-lg">
                 <h2 className="font-primary text-2xl font-bold mb-4 text-heading">Welcome to MB Online Tools</h2>
@@ -42,8 +41,9 @@ export default function HomePage() {
                         our suite of intuitive tools is here to help.
                     </p>
                     <p>
+                        {/* ▼▼▼ TU JE FINÁLNA OPRAVA APOSTROFU ▼▼▼ */}
                         Our flagship tool, the <strong>Intelligent Primer Designer</strong>, uses advanced heuristics to design optimal PCR primers, 
-                        saving you time and increasing your experiment's success rate. Browse our classic calculators for routine tasks or explore 
+                        saving you time and increasing your experiment&apos;s success rate. Browse our classic calculators for routine tasks or explore 
                         our interactive pathway diagrams to visualize complex biological processes.
                     </p>
                 </div>
