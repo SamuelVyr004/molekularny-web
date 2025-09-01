@@ -12,16 +12,21 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-type Pathway = {
-    id: string;
-    name: string;
+type Pathway = { 
+    id: string; 
+    name: string; 
     pathway_type: 'signaling' | 'biochemical';
     image_url_inactive: string | null;
     image_url_active: string | null;
     details: string | null;
 };
 
-export default function PathwayPage({ params }: { params: { pathwayId: string } }) {
+// ▼▼▼ TU JE OPRAVA TYPOVANIA ▼▼▼
+interface PathwayPageProps {
+    params: { pathwayId: string };
+}
+
+export default function PathwayPage({ params }: PathwayPageProps) {
     const [allPathways, setAllPathways] = useState<Pathway[]>([]);
     const [activePathway, setActivePathway] = useState<Pathway | null>(null);
     const [isShowingActive, setIsShowingActive] = useState(false);
@@ -37,16 +42,12 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
 
             if (pathwaysData.length > 0) {
                 const pathwayFromUrl = pathwaysData.find(p => p.id === params.pathwayId);
-                setActivePathway(pathwayFromUrl || null); // Ak ID v URL neexistuje, nastaví sa null
-                
-                // Resetujeme stavy pri zmene dráhy
-                setIsShowingActive(false);
-                setIsDetailsOpen(false);
+                setActivePathway(pathwayFromUrl || null);
             }
             setIsLoading(false);
         };
         fetchAndSetData();
-    }, [params.pathwayId]); // Spustí sa znova, keď sa zmení ID v URL
+    }, [params.pathwayId]); 
 
     const getDisplayedImage = () => {
         if (!activePathway) return null;
@@ -55,10 +56,10 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
         }
         return activePathway.image_url_inactive;
     };
-
+    
     return (
         <div className="flex flex-col min-h-screen bg-background text-text">
-            <header className="py-5 px-4 border-b border-border sticky top-0 bg-background/80 backdrop-blur-sm z-10">
+            <header className="py-5 px-4 border-b border-border">
                 <nav className="max-w-7xl mx-auto flex justify-between items-center">
                     <Link href="/" className="text-2xl font-bold">MB.</Link>
                     <ul className="flex gap-8 items-center text-lg">
@@ -68,7 +69,6 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
                 </nav>
             </header>
 
-            {/* Panel s detailmi */}
             <div className={`fixed inset-0 bg-black/60 z-30 transition-opacity duration-300 ${isDetailsOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsDetailsOpen(false)} />
             <aside className={`fixed top-0 right-0 h-full w-[90%] md:w-1/3 bg-card border-l border-border p-6 overflow-y-auto transition-transform duration-300 ease-in-out z-40 ${isDetailsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="flex justify-between items-center mb-4">
@@ -79,7 +79,6 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
             </aside>
 
             <div className="flex-grow flex flex-col md:flex-row gap-8 p-4 sm:p-6 lg:p-8">
-                {/* Bočný panel so zoznamom dráh */}
                 <aside className="w-full md:w-3/12 md:max-w-sm flex-shrink-0">
                     <div className="bg-card/50 p-4 rounded-lg border border-border h-full">
                         <h2 className="text-lg font-bold mb-3">Available Pathways</h2>
@@ -94,14 +93,8 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
                         </ul>
                     </div>
                 </aside>
-                
-                {/* Hlavný obsah s obrázkom dráhy */}
                 <main className="flex-grow flex flex-col min-w-0">
-                    {isLoading ? (
-                        <div className="flex-grow flex items-center justify-center">
-                            <p>Loading pathway...</p>
-                        </div>
-                    ) : activePathway ? (
+                    {isLoading ? <p className="text-center p-10">Loading pathway...</p> : activePathway ? (
                         <>
                             <section aria-labelledby="pathway-title" className="flex-shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                                 <h1 id="pathway-title" className="text-3xl font-bold">{activePathway.name}</h1>
@@ -110,17 +103,15 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
                                     {activePathway.pathway_type === 'signaling' && (<Button onClick={() => setIsShowingActive(!isShowingActive)}>{isShowingActive ? 'Show Inactive' : 'Show Active'}</Button>)}
                                 </div>
                             </section>
-                            <div className="relative flex-grow rounded-lg border border-border bg-card/30 flex items-center justify-center overflow-hidden min-h-[300px] md:min-h-[500px]">
-                                {getDisplayedImage() ?
-                                    <Image src={getDisplayedImage()!} alt={activePathway.name} fill={true} style={{ objectFit: 'contain' }} className="p-4" /> :
-                                    <p>Image not available.</p>
+                            <div className="relative flex-grow rounded-lg border border-border bg-card/30 flex items-center justify-center overflow-hidden min-h-[500px]">
+                                {getDisplayedImage() ? 
+                                 <Image src={getDisplayedImage()!} alt={activePathway.name} fill={true} style={{objectFit: 'contain'}} className="p-4" /> :
+                                 <p>Image not available.</p>
                                 }
                             </div>
                         </>
                     ) : (
-                        <div className="flex-grow flex items-center justify-center">
-                            <p>Pathway not found. Please select one from the list.</p>
-                        </div>
+                        <p className="text-center p-10">Pathway not found. Please select one from the list.</p>
                     )}
                 </main>
             </div>
