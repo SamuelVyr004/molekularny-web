@@ -21,10 +21,16 @@ type Pathway = {
     details: string | null;
 };
 
-// ▼▼▼ TU JE FINÁLNA A NAJROBUSTNEJŠIA OPRAVA ▼▼▼
-// Namiesto vlastného typu použijeme všeobecnejší prístup
-export default function PathwayPage({ params }: { params: { pathwayId: string } }) {
-    const { pathwayId } = params; // Extrahujeme ID priamo z params
+// ▼▼▼ TU JE FINÁLNA A JEDINÁ OPRAVA ▼▼▼
+// Toto je správny a robustný spôsob, ako definovať props pre dynamickú stránku
+type PathwayPageProps = {
+    params: {
+        pathwayId: string;
+    };
+};
+
+export default function PathwayPage({ params }: PathwayPageProps) {
+    const { pathwayId } = params; // Extrahujeme ID, aby sme ho mohli jednoducho používať
 
     const [allPathways, setAllPathways] = useState<Pathway[]>([]);
     const [activePathway, setActivePathway] = useState<Pathway | null>(null);
@@ -35,12 +41,10 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
     useEffect(() => {
         const fetchAndSetData = async () => {
             setIsLoading(true);
-            // Načítame všetky dráhy
             const { data } = await supabase.from('pathways').select('*').eq('is_public', true).order('created_at');
             const pathwaysData = data || [];
             setAllPathways(pathwaysData);
 
-            // Následne nájdeme a nastavíme tú aktívnu
             if (pathwaysData.length > 0) {
                 const pathwayFromUrl = pathwaysData.find(p => p.id === pathwayId);
                 setActivePathway(pathwayFromUrl || null);
@@ -48,9 +52,7 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
             setIsLoading(false);
         };
         fetchAndSetData();
-    }, [pathwayId]); // Efekt teraz závisí priamo od `pathwayId`
-
-    // ... zvyšok kódu zostáva rovnaký ...
+    }, [pathwayId]); // Efekt teraz správne závisí od `pathwayId`
 
     const getDisplayedImage = () => {
         if (!activePathway) return null;
@@ -114,7 +116,7 @@ export default function PathwayPage({ params }: { params: { pathwayId: string } 
                             </div>
                         </>
                     ) : (
-                        <p className="text-center p-10">Pathway not found. Please select one from the list.</p>
+                        <p className="text-center p-10">Pathway not found. Please select one from the list or go to the main pathways page.</p>
                     )}
                 </main>
             </div>
