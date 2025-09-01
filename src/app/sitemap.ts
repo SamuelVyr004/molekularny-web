@@ -12,11 +12,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // DÔLEŽITÉ: Nahraď za tvoju finálnu doménu
-  const baseUrl = 'https://tvojadomena.sk';
+  const baseUrl = 'https://www.mbonlinetools.eu';
 
   // 1. Pridáme statické stránky
   const staticRoutes = [
     { url: baseUrl, lastModified: new Date() },
+    // Stránka /pathways ako taká už nebude hlavná, ale môžeme ju nechať ako prehľad
     { url: `${baseUrl}/pathways`, lastModified: new Date() },
   ];
 
@@ -27,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .eq('is_public', true);
 
   const dynamicRoutes = (pathways || []).map(pathway => ({
-    url: `${baseUrl}/pathways?pathway=${pathway.id}`,
+    url: `${baseUrl}/pathways/${pathway.id}`, // Používame peknú URL
     lastModified: new Date(pathway.created_at),
   }));
 

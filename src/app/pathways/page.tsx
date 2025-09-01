@@ -1,139 +1,62 @@
-'use client';
+// Súbor: src/app/pathways/page.tsx
 
-import { useState, useEffect, Suspense } from 'react'; // Pridaný Suspense
 import Link from 'next/link';
-import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-type Pathway = { 
-    id: string; 
-    name: string; 
-    pathway_type: 'signaling' | 'biochemical';
-    image_url_inactive: string | null;
-    image_url_active: string | null;
-    details: string | null;
-};
-
-// Tento komponent teraz obaľuje našu logiku
-function PathwayDisplay() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const [pathways, setPathways] = useState<Pathway[]>([]);
-    const [activePathway, setActivePathway] = useState<Pathway | null>(null);
-    const [isShowingActive, setIsShowingActive] = useState(false);
-    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    
-    const activePathwayId = searchParams.get('pathway');
-
-    useEffect(() => {
-        const fetchAndSetData = async () => {
-            setIsLoading(true);
-            const { data } = await supabase.from('pathways').select('*').eq('is_public', true).order('created_at');
-            const allPathways = data || [];
-            setPathways(allPathways);
-
-            if (allPathways.length > 0) {
-                const pathwayFromUrl = allPathways.find(p => p.id === activePathwayId);
-                const pathwayToActivate = pathwayFromUrl || allPathways[0];
-                setActivePathway(pathwayToActivate);
-
-                if (!activePathwayId) {
-                    router.replace(`/pathways?pathway=${pathwayToActivate.id}`, { scroll: false });
-                }
-            }
-            setIsLoading(false);
-        };
-        fetchAndSetData();
-    }, []); 
-
-    const selectPathway = (pathway: Pathway) => {
-        if (activePathway?.id === pathway.id) return;
-        setActivePathway(pathway);
-        setIsShowingActive(false);
-        setIsDetailsOpen(false);
-        router.push(`/pathways?pathway=${pathway.id}`, { scroll: false });
-    };
-
-    const getDisplayedImage = () => {
-        if (!activePathway) return null;
-        if (activePathway.pathway_type === 'signaling' && isShowingActive) {
-            return activePathway.image_url_active;
-        }
-        return activePathway.image_url_inactive;
-    };
-
-    return (
-        <>
-            <div className={`fixed inset-0 bg-black/60 z-30 transition-opacity duration-300 ${isDetailsOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsDetailsOpen(false)} />
-            <aside className={`fixed top-0 right-0 h-full w-[90%] md:w-1/3 bg-card border-l border-border p-6 overflow-y-auto transition-transform duration-300 ease-in-out z-40 ${isDetailsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Details</h2>
-                    <Button variant="ghost" size="icon" onClick={() => setIsDetailsOpen(false)}><X className="h-6 w-6" /></Button>
-                </div>
-                <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: activePathway?.details || '' }} />
-            </aside>
-
-            <div className="flex-grow flex flex-col md:flex-row gap-8 p-4 sm:p-6 lg:p-8">
-                <aside className="w-full md:w-3/12 md:max-w-sm flex-shrink-0">
-                    <div className="bg-card/50 p-4 rounded-lg border border-border h-full">
-                        <h2 className="text-lg font-bold mb-3">Available Pathways</h2>
-                        {isLoading ? <p>Loading...</p> : (
-                            <ul className="space-y-2">
-                                {pathways.map(p => (
-                                    <li key={p.id}>
-                                        <button onClick={() => selectPathway(p)} className={`w-full text-left p-3 rounded-md border transition-colors ${activePathway?.id === p.id ? 'bg-background font-bold text-primary' : 'hover:bg-white/5'}`}>{p.name}</button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                </aside>
-                <main className="flex-grow flex flex-col min-w-0">
-                    <section aria-labelledby="pathway-title" className="flex-shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                        <h1 id="pathway-title" className="text-3xl font-bold">{activePathway?.name || "Select a Pathway"}</h1>
-                        <div className="flex gap-2 self-end sm:self-center">
-                            {activePathway?.details && (<Button variant="outline" onClick={() => setIsDetailsOpen(true)}>Show Details</Button>)}
-                            {activePathway?.pathway_type === 'signaling' && (<Button onClick={() => setIsShowingActive(!isShowingActive)}>{isShowingActive ? 'Show Inactive' : 'Show Active'}</Button>)}
-                        </div>
-                    </section>
-                    <div className="relative flex-grow rounded-lg border border-border bg-card/30 flex items-center justify-center overflow-hidden min-h-[300px] md:min-h-[500px]">
-                        {isLoading ? <p>Loading...</p> : 
-                         getDisplayedImage() ? 
-                         <Image src={getDisplayedImage()!} alt={activePathway?.name || 'Pathway diagram'} fill={true} style={{objectFit: 'contain'}} className="p-4" /> :
-                         <p>Select a pathway to display.</p>
-                        }
-                    </div>
-                </main>
-            </div>
-        </>
-    );
+// Táto funkcia beží na serveri a načíta dáta vopred
+async function getPathways() {
+    const { data } = await supabase.from('pathways').select('id, name, description').eq('is_public', true).order('created_at');
+    return data || [];
 }
 
+export default async function PathwaysListPage() {
+    const pathways = await getPathways();
 
-// Toto je hlavný komponent stránky, ktorý sa stará o Suspense
-export default function PathwaysPage() {
     return (
         <div className="flex flex-col min-h-screen bg-background text-text">
-            <header className="py-5 px-4 border-b border-border sticky top-0 bg-background/80 backdrop-blur-sm z-10">
-                <nav className="max-w-7xl mx-auto flex justify-between items-center">
-                    <Link href="/" className="text-2xl font-bold">MB.</Link>
-                    <ul className="flex gap-8 items-center text-lg">
-                        <li><Link href="/">Home</Link></li>
-                        <li><Link href="/pathways" className="text-primary font-bold">Pathways</Link></li>
+            <header className="py-5 px-4 sm:px-6 lg:px-8 border-b border-border">
+                 <nav className="max-w-7xl mx-auto flex justify-between items-center">
+                    <Link href="/" className="text-2xl font-bold font-primary text-primary no-underline">MB.</Link>
+                    <ul className="flex gap-8 items-center font-primary text-lg">
+                        <li><Link href="/" className="text-text hover:text-primary no-underline transition-colors">Home</Link></li>
+                        <li><Link href="/pathways" className="text-primary font-bold no-underline">Pathways</Link></li>
                     </ul>
                 </nav>
             </header>
-            <Suspense fallback={<p className="p-8">Loading pathway...</p>}>
-                <PathwayDisplay />
-            </Suspense>
+
+            <main className="flex-grow">
+                <section className="text-center py-16 sm:py-24 px-4">
+                    <h1 className="font-primary text-4xl sm:text-5xl font-bold mb-4 text-heading">
+                        Interactive Pathway Library
+                    </h1>
+                    <p className="text-lg sm:text-xl max-w-2xl mx-auto text-text">
+                        Explore our collection of signaling and biochemical pathways.
+                    </p>
+                </section>
+
+                <section className="max-w-4xl mx-auto px-4 pb-16 sm:pb-24">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {pathways.map((pathway) => (
+                            <Link 
+                                href={`/pathways/${pathway.id}`} 
+                                key={pathway.id} 
+                                className="group block bg-card/50 p-6 rounded-lg border border-border hover:border-white/50 transition-all duration-300 hover:scale-[1.02]"
+                            >
+                                <h2 className="font-primary text-2xl font-bold text-heading mb-2">{pathway.name}</h2>
+                                <p className="text-text/80">{pathway.description || 'Click to view the interactive diagram.'}</p>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            <footer className="text-center py-6 border-t border-border text-sm">
+                <p>&copy; 2025 | A fusion of science and code.</p>
+            </footer>
         </div>
     );
 }

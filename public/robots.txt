@@ -1,12 +1,35 @@
-# Povoľ všetky stránky
+# ===============================================================
+# Pravidlá pre všetkých vyhľadávacích robotov (Google, Bing, atď.)
+# ===============================================================
 User-agent: *
 
-# Zakáž indexáciu technických priečinkov Next.js
-Disallow: /_next/
-Disallow: /api/
+# Povolíme prístup na hlavnú stránku
+Allow: /
 
-# Zakáž indexáciu URL s parametrami (často zdroj duplicitných alebo falošných stránok)
-Disallow: /*?
+# Povolíme prístup na stránku s dráhami a jej podstránky
+Allow: /pathways
+Allow: /pathways?pathway=*
 
-# Tvoja sitemap
+# Povolíme prístup k tvojim statickým nástrojom
+Allow: /tools/
+
+# Povolíme prístup k súborom potrebným na fungovanie stránky
+# (napr. obrázky, CSS, fonty)
+Allow: /_next/static/
+Allow: /public/
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.svg
+Allow: /*.css
+Allow: /*.js
+
+# A teraz to najdôležitejšie:
+# Zakážeme VŠETKO OSTATNÉ.
+# Toto zabráni indexovaniu /_next/..., /api/..., 
+# a akýchkoľvek nechcených URL, ktoré by mohli vzniknúť.
+Disallow: /
+
+# ===============================================================
+# Umiestnenie mapy stránky
+# ===============================================================
 Sitemap: https://mbonlinetools.eu/sitemap.xml
