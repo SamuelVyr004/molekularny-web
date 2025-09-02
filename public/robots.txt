@@ -1,35 +1,31 @@
 # ===============================================================
-# Pravidlá pre všetkých vyhľadávacích robotov (Google, Bing, atď.)
+# Pravidlá pre všetkých vyhľadávacích robotov
 # ===============================================================
 User-agent: *
+
+# Povolíme prístup k sitemape - TOTO JE KĽÚČOVÁ ZMENA
+Allow: /sitemap.xml
 
 # Povolíme prístup na hlavnú stránku
 Allow: /
 
 # Povolíme prístup na stránku s dráhami a jej podstránky
 Allow: /pathways
-Allow: /pathways?pathway=*
+Allow: /pathways/
 
 # Povolíme prístup k tvojim statickým nástrojom
 Allow: /tools/
 
 # Povolíme prístup k súborom potrebným na fungovanie stránky
-# (napr. obrázky, CSS, fonty)
 Allow: /_next/static/
-Allow: /public/
 Allow: /*.png
 Allow: /*.jpg
 Allow: /*.svg
-Allow: /*.css
-Allow: /*.js
 
-# A teraz to najdôležitejšie:
-# Zakážeme VŠETKO OSTATNÉ.
-# Toto zabráni indexovaniu /_next/..., /api/..., 
-# a akýchkoľvek nechcených URL, ktoré by mohli vzniknúť.
+# Zakážeme VŠETKO OSTATNÉ
 Disallow: /
 
 # ===============================================================
 # Umiestnenie mapy stránky
 # ===============================================================
-Sitemap: https://mbonlinetools.eu/sitemap.xml
+Sitemap: https://www.mbonlinetools.eu/sitemap.xml
